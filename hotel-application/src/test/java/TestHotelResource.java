@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class TestHotelResource {
     private static AdminResource adminResource;
@@ -82,7 +83,7 @@ public class TestHotelResource {
 
     @Test
     public void getRoom_nonexistent() {
-        Assertions.assertThrows(IllegalStateException.class,
+        Assertions.assertThrows(NoSuchElementException.class,
                 () -> hotelResource.getRoom("foo"));
     }
 

@@ -10,11 +10,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReservationService {
-    final Map<String, IRoom> roomMap;
+    final Set<IRoom> roomSet;
     final Map<Customer, List<Reservation>> reservationMap;
 
     private ReservationService() {
-        roomMap = new HashMap<>();
+        roomSet = new HashSet<>();
         reservationMap = new HashMap<>();
     }
 
@@ -27,17 +27,11 @@ public class ReservationService {
     }
 
     public void addRoom(IRoom room) {
-        if (roomMap.containsKey(room.getRoomNumber())) {
-            throw new IllegalStateException("Attempting to create duplicate room number.");
-        }
-        roomMap.put(room.getRoomNumber(), room);
+        roomSet.add(room);
     }
 
     public IRoom getARoom(String roomId) {
-        if (!roomMap.containsKey(roomId)) {
-            throw new IllegalStateException("Specified room does not exist.");
-        }
-        return roomMap.get(roomId);
+        return roomSet.stream().filter(r -> r.getRoomNumber().equals(roomId)).collect(Collectors.toSet()).iterator().next();
     }
 
     public Reservation reserveARoom(Customer customer, IRoom room, LocalDate checkInDate, LocalDate checkOutDate) {
@@ -95,7 +89,7 @@ public class ReservationService {
     }
 
     public Set<IRoom> getAllRooms() {
-        return new HashSet<>(roomMap.values());
+        return roomSet;
     }
 
     public Collection<Reservation> getCustomersReservation(Customer customer) {
@@ -107,7 +101,7 @@ public class ReservationService {
     }
 
     public void purgeAllReservationsAndRooms() {
-        roomMap.clear();
+        roomSet.clear();
         reservationMap.clear();
     }
 }
